@@ -2105,7 +2105,7 @@ function resetAll(){
     if(location.protocol!=="file:"){
       // 1. proxy?
       try{
-        const r=await fetch("api/config",{cache:"no-store"});
+        const r=await fetch("/api/config",{cache:"no-store"});
         if(r.ok){
           const c=await r.json();
           if(c && c.proxy){
@@ -2171,7 +2171,7 @@ function resetAll(){
       const {latitude:lat, longitude:lon} = pos.coords;
       try{
         const url = CFG.mode==="proxy"
-          ? `api/weather?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}`
+          ? `/api/weather?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}`
           : `https://api.openweathermap.org/data/2.5/weather?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}&units=metric&lang=pt_br&appid=${encodeURIComponent(CFG.owmKey)}`;
         const r=await fetch(url);
         const d=await r.json();
@@ -2351,7 +2351,7 @@ function resetAll(){
   }
 
   async function callGeminiProxy(contents){
-    const r=await fetch("api/chat",{
+    const r=await fetch("/api/chat",{
       method:"POST",
       headers:{"content-type":"application/json"},
       body:JSON.stringify({system:SYSTEM_PROMPT, contents})
