@@ -2350,11 +2350,15 @@ function resetAll(){
     const e=new Error("Nenhum modelo Gemini respondeu."); e.tried=tried; throw e;
   }
 
+  /* No modo proxy o prompt de sistema é montado no servidor (server.mjs) e o
+     cliente manda apenas os turnos: o endpoint detém a chave, então confiar
+     no `system` do navegador o transformaria num LLM de uso geral. O
+     SYSTEM_PROMPT acima continua valendo para o modo direto. */
   async function callGeminiProxy(contents){
     const r=await fetch("/api/chat",{
       method:"POST",
       headers:{"content-type":"application/json"},
-      body:JSON.stringify({system:SYSTEM_PROMPT, contents})
+      body:JSON.stringify({contents})
     });
     const d=await r.json().catch(()=>({}));
     if(!r.ok){

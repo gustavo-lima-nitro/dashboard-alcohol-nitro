@@ -97,6 +97,15 @@ aviso; o resto do dashboard não muda). Ao mexer nessas features, teste os três
   histórico (`CHAT.history`) guarda só a pergunta limpa, sem o bloco de contexto, para não
   duplicar dados a cada turno. Recorte vazio é caso tratado: o prompt manda avisar em vez
   de inventar número.
+- **No modo proxy o prompt de sistema é do servidor.** `SYSTEM_PROMPT` existe nos dois
+  lados: em `index.html` ele só é usado no modo **direto**; no modo proxy o cliente manda
+  apenas `contents` e o `server.mjs` monta o seu próprio (um `system` que venha no corpo é
+  ignorado). Ao editar o prompt, **edite as duas cópias** — senão os dois modos respondem
+  diferente. `/api/chat` e `/api/weather` também exigem origem própria (ou
+  `ALLOWED_ORIGINS`; sem `Origin`/`Referer` só passa de loopback), aplicam janela
+  deslizante por IP e validam `contents` (turnos `user`/`model`, tetos de parts e de
+  caracteres). O front respeita esses tetos: `CHAT.history` fica em 12 turnos e
+  `MAX_ROWS_CTX` em 220 linhas — mexer neles pede revisar `CHAT_MAX_*`.
 - **`CHAT_SYNC`** é o único acoplamento com o núcleo: `renderAll()` chama esse ponteiro
   (nulo até o boot) para manter o resumo de filtros do painel em dia.
 - **Cadeia de fallback**: `GEMINI_MODELS` no `.env`, replicada em `DEFAULT_MODELS`
