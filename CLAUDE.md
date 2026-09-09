@@ -75,6 +75,41 @@ Flow: **file drop/pick → `loadFile` → `parseCSV` → `detectCols` → `inges
   normalized form** — `"bosnia herzegovina"`, not `"bosnia-herzegovina"` — and make sure the
   value is a name that actually exists in the 110m atlas.
 
+
+## Integrações externas (chat Gemini + clima)
+
+Duas capacidades opcionais vivem no fim do IIFE `boot()` de `index.html`, depois do bloco
+de suporte. Elas dependem de um `.env` na raiz — que o navegador **não** consegue ler em
+`file://`. Daí os dois runtimes na raiz, ambos zero-dependência:
+
+```
+serve.ps1    HttpListener puro; serve os estáticos + o próprio .env. Não há /api/*.
+server.mjs   Node 18+; serve os estáticos e faz proxy de /api/weather e /api/chat.
+             Aqui as chaves ficam no processo e nunca chegam ao navegador; o .env é 403.
+```
+
+`bootConfig()` decide o modo em runtime, nesta ordem: **proxy** (`/api/config` responde),
+**direct** (leu o `.env` via fetch) ou **off** (`file://` — chat e clima desligados com
+aviso; o resto do dashboard não muda). Ao mexer nessas features, teste os três modos.
+
+- **O contexto do chat é remontado a cada envio** por `buildContext()`, a partir de
+  `filtered()` — nunca de `S.rows`. É isso que faz o modelo respeitar os filtros. O
+  histórico (`CHAT.history`) guarda só a pergunta limpa, sem o bloco de contexto, para não
+  duplicar dados a cada turno. Recorte vazio é caso tratado: o prompt manda avisar em vez
+  de inventar número.
+- **`CHAT_SYNC`** é o único acoplamento com o núcleo: `renderAll()` chama esse ponteiro
+  (nulo até o boot) para manter o resumo de filtros do painel em dia.
+- **Cadeia de fallback**: `GEMINI_MODELS` no `.env`, replicada em `DEFAULT_MODELS`
+  (index.html) e no default de `MODELS` (server.mjs) — mantenha as três em sincronia.
+  404/429/5xx caem para o próximo modelo; 400/401/403 param a cadeia (erro de chave ou
+  payload, trocar de modelo não resolveria).
+- **Modelos Gemini 3.x raciocinam antes de responder** e o "pensamento" consome o mesmo
+  orçamento de saída. Sem `thinkingConfig.thinkingLevel:"low"` e `maxOutputTokens` folgado
+  a resposta volta **vazia** com `finishReason: MAX_TOKENS` — um HTTP 200 que parece
+  sucesso. Se um 400 mencionar `thinking`, o mesmo modelo é repetido sem o campo.
+- **Clima**: `navigator.geolocation` → OpenWeatherMap. Permissão negada ou falha de rede
+  apenas não exibe o widget (`.weather.on`); nunca quebra a topbar.
+
 ## Known, intentional limitations (do not "fix" silently)
 
 - ~29 microstates have no polygon at 110m resolution. They stay in every statistic, chart and
@@ -82,6 +117,8 @@ Flow: **file drop/pick → `loadFile` → `parseCSV` → `detectCols` → `inges
 - The continent/alias gazetteer is keyed on **English** country names. Portuguese *headers* are
   supported; Portuguese *country names* land in the visible "Sem mapeamento" bucket.
 - The support modal has no backend — it logs the form and shows a confirmation.
+- Opened via `file://`, the chat and the weather widget stay off: the browser blocks reading
+  the `.env`. That is the designed degradation, not a bug — run `serve.ps1` or `server.mjs`.
 
 ## Visual identity
 
