@@ -10,6 +10,9 @@ Interface em **pt-BR**.
 Dados/drinks.csv                            dataset de exemplo (193 países) — referência, somente leitura
 Dashboards/index.html                       entregável: HTML + CSS + JS em um único arquivo
 Referencias/nitro_brand_book_by_pomelli.pdf fonte visual (cores, tipografia, logo)
+serve.ps1                                   servidor estático local (PowerShell puro)
+server.mjs                                  servidor local com proxy das APIs (Node 18+)
+.env.example                                modelo das variáveis de ambiente
 ```
 
 Não há build step, gerenciador de pacotes ou test runner. Tudo roda no navegador a partir de `file://`.
@@ -26,8 +29,56 @@ Depois arraste o arquivo `Dados/drinks.csv` (ou qualquer CSV no mesmo formato) p
 janela para carregar os dados. O dashboard funciona em **um único gesto**: ao soltar a planilha,
 todos os filtros já iniciam com "tudo selecionado".
 
-Nenhum dado é enviado para fora do navegador — todo o processamento é 100% local (a única
-chamada de rede é a folha de estilo do Google Fonts).
+Os dados da planilha continuam sendo processados 100% no navegador. As duas integrações
+opcionais (chat com IA e previsão do tempo) são as únicas que fazem chamadas externas — e só
+quando você as usa. Veja a seção abaixo.
+
+## Integrações opcionais (chat com IA e clima)
+
+O dashboard ganha duas capacidades quando servido por HTTP:
+
+- **Conversar com os dados** — botão na parte inferior central. Abre um chat com o Google
+  Gemini que responde sobre o **recorte filtrado** (continente, países, faixa e métrica ativos),
+  com cadeia de modelos de fallback em caso de erro ou estouro de cota.
+- **Previsão do tempo** — pílula na barra superior, por geolocalização do navegador
+  (OpenWeatherMap). Sem permissão de localização, o widget simplesmente não aparece.
+
+Ambas leem as chaves de um `.env` na raiz. Copie o modelo e preencha:
+
+```bash
+cp .env.example .env
+```
+
+### Por que preciso de um servidor?
+
+Uma página aberta em `file://` não consegue ler o `.env` — o navegador bloqueia `fetch` de
+arquivos locais. Há duas opções, ambas sem instalar dependência alguma:
+
+**PowerShell** (funciona em qualquer Windows, sem instalar nada):
+
+```bash
+powershell -ExecutionPolicy Bypass -File serve.ps1
+```
+
+**Node 18+** (modo proxy: as chaves ficam no servidor e nunca chegam ao navegador):
+
+```bash
+node server.mjs
+```
+
+Os dois sobem em `http://localhost:8080/Dashboards/index.html`. Abrir por `file://` continua
+funcionando — o chat e o clima apenas ficam desativados, com um aviso explicando o motivo.
+
+### Variáveis do `.env`
+
+| Variável | Para que serve |
+| --- | --- |
+| `GEMINI_API_KEY` | Chave do Google AI Studio, usada pelo chat |
+| `GEMINI_MODELS` | Cadeia de fallback, da esquerda para a direita |
+| `OPENWEATHER_API_KEY` | Chave do OpenWeatherMap, usada pelo widget de clima |
+| `PORT` | Porta dos servidores locais (padrão 8080) |
+
+O `.env` está no `.gitignore` e **nunca** deve ser versionado.
 
 ## Arquitetura
 
