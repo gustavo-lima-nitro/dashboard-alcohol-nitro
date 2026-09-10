@@ -1,0 +1,277 @@
+{
+  "data": "2026-09-09",
+  "dia_semana": "quarta-feira",
+  "janela": { "inicio": "2026-09-09T00:00:00-03:00", "fim": "2026-09-09T23:59:59-03:00" },
+  "numeros": {
+    "issues_abertas_hoje": 5,
+    "issues_fechadas_hoje": 4,
+    "backlog_aberto": 1,
+    "prs_abertas_hoje": 5,
+    "prs_mergeadas_hoje": 4,
+    "prs_fechadas_sem_merge_hoje": 0,
+    "prs_abertas_no_fim_do_dia": 1,
+    "prs_em_rascunho": 0,
+    "commits_hoje": 5,
+    "linhas_adicionadas": 1160,
+    "linhas_removidas": 14,
+    "arquivos_tocados": 13,
+    "discussions_novas_hoje": 6,
+    "discussions_comentadas_hoje": 0,
+    "discussions_total": 6,
+    "comentarios_hoje": 0,
+    "quadro": null
+  },
+  "issues_fechadas": [
+    {
+      "numero": 1,
+      "titulo": "Chat com IA (Gemini) sobre os dados filtrados + previsão do tempo na topbar",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/1",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T12:52:18Z",
+      "fechada_em": "2026-09-09T13:27:39Z",
+      "horas_de_vida": 0.6,
+      "pr_relacionada": 2,
+      "resumo": "Entrega do chat Gemini sobre o recorte filtrado e do widget de clima na topbar, com os três modos de configuração (proxy, direto e off).",
+      "impacto": "É a maior entrega funcional do dia: 991 linhas adicionadas e a base de tudo o que veio depois.",
+      "verificado_em_producao": "nao"
+    },
+    {
+      "numero": 5,
+      "titulo": "Rota raiz do deploy na Vercel nao abre o dashboard (falta rewrite para /Dashboards/index.html)",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/5",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T13:56:47Z",
+      "fechada_em": "2026-09-09T14:50:02Z",
+      "horas_de_vida": 0.9,
+      "pr_relacionada": 9,
+      "resumo": "Abrir a URL de produção não levava ao dashboard. Um rewrite de 5 linhas no vercel.json passou a servir /Dashboards/index.html na raiz.",
+      "impacto": "É metade do que o dono pediu na Discussion #3, e a única metade que já está no ar.",
+      "verificado_em_producao": "sim"
+    },
+    {
+      "numero": 6,
+      "titulo": "/api/chat e um proxy aberto para o Gemini: sem autenticacao, rate limit e com prompt de sistema controlado pelo cliente",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/6",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T13:56:49Z",
+      "fechada_em": "2026-09-09T16:35:42Z",
+      "horas_de_vida": 2.6,
+      "pr_relacionada": 10,
+      "resumo": "O endpoint /api/chat do server.mjs repassava ao Gemini o prompt de sistema enviado pelo cliente, sem teto de tamanho, sem checagem de origem e sem rate limit — um LLM de uso geral custeado pela chave da Nitro.",
+      "impacto": "Contido enquanto o servidor só roda em localhost; deixaria de ser teórico no minuto em que o endpoint virasse público.",
+      "verificado_em_producao": "nao_verificado"
+    },
+    {
+      "numero": 7,
+      "titulo": "Detecção de modo proxy/direto usa fetch relativo e nunca acha /api/config, /api/weather, /api/chat",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/7",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T14:21:19Z",
+      "fechada_em": "2026-09-09T14:47:02Z",
+      "horas_de_vida": 0.4,
+      "pr_relacionada": 8,
+      "resumo": "O bootConfig() consultava /api/* por caminho relativo e nunca detectava o modo proxy. Três linhas passaram a usar caminho absoluto.",
+      "impacto": "Sem isso, o dashboard entrava em modo direto ou off mesmo com o proxy no ar.",
+      "verificado_em_producao": "nao_verificado"
+    }
+  ],
+  "issues_abertas": [
+    {
+      "numero": 4,
+      "titulo": "Chat e clima nao funcionam na Vercel: nao existe funcao serverless lendo as environment variables",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/4",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T13:56:45Z",
+      "dias_aberta": 0,
+      "resumo": "A Vercel serve o repositório como conteúdo estático: o server.mjs é um processo persistente que a plataforma não executa e não havia diretório api/. Logo /api/config responde 404 e o bootConfig() cai em modo off, ignorando as Environment Variables do painel.",
+      "bloqueada_por": "decisao"
+    }
+  ],
+  "prs_mergeadas": [
+    {
+      "numero": 2,
+      "titulo": "feat: chat Gemini sobre os dados filtrados e previsão do tempo na topbar",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/2",
+      "autor": "gustavo-lima-nitro",
+      "mergeada_em": "2026-09-09T13:27:37Z",
+      "adicoes": 991,
+      "remocoes": 2,
+      "arquivos": 7,
+      "fecha_issues": [1],
+      "resumo": "Chat sobre o recorte filtrado (contexto remontado a cada envio), clima na topbar e os runtimes serve.ps1 / server.mjs para ler o .env fora do file://.",
+      "revisao": "sem revisão registrada"
+    },
+    {
+      "numero": 8,
+      "titulo": "fix: caminhos absolutos em /api/* para o modo proxy ser detectado",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/8",
+      "autor": "gustavo-lima-nitro",
+      "mergeada_em": "2026-09-09T14:47:00Z",
+      "adicoes": 3,
+      "remocoes": 3,
+      "arquivos": 1,
+      "fecha_issues": [7],
+      "resumo": "Troca de três fetch relativos por caminhos absolutos na detecção de modo.",
+      "revisao": "sem revisão registrada"
+    },
+    {
+      "numero": 9,
+      "titulo": "feat: rewrite da raiz para o dashboard no deploy da Vercel",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/9",
+      "autor": "gustavo-lima-nitro",
+      "mergeada_em": "2026-09-09T14:50:01Z",
+      "adicoes": 5,
+      "remocoes": 0,
+      "arquivos": 1,
+      "fecha_issues": [5],
+      "resumo": "Rewrite no vercel.json para a raiz servir /Dashboards/index.html.",
+      "revisao": "sem revisão registrada"
+    },
+    {
+      "numero": 10,
+      "titulo": "fix: fecha o proxy aberto de /api/chat (prompt no servidor, validação, origem e rate limit)",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/10",
+      "autor": "gustavo-lima-nitro",
+      "mergeada_em": "2026-09-09T16:35:40Z",
+      "adicoes": 161,
+      "remocoes": 9,
+      "arquivos": 4,
+      "fecha_issues": [6],
+      "resumo": "O prompt de sistema passa a ser sempre o do servidor (um system vindo no corpo é ignorado, não rejeitado), validateContents sanea e limita os turnos (16 turnos, 60 mil caracteres por part, corpo de 256 KB), origem cruzada barrada e rate limit por IP e rota (10/min no chat, 20/min no clima).",
+      "revisao": "sem revisor humano; provado no motor JS do navegador contra payloads adversariais, porque não há Node nesta máquina"
+    }
+  ],
+  "prs_abertas": [
+    {
+      "numero": 11,
+      "titulo": "feat: Serverless Functions para o chat e o clima na Vercel",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/11",
+      "autor": "gustavo-lima-nitro",
+      "rascunho": false,
+      "aberta_em": "2026-09-09T16:30:23Z",
+      "dias_parada": 0,
+      "resumo": "Três Serverless Functions autocontidas (api/config.mjs, api/weather.mjs, api/chat.mjs) com o mesmo contrato HTTP do server.mjs, lendo process.env — as chaves ficam na função e nunca chegam ao navegador. Já nasce com o prompt no servidor, validação de contents e checagem de origem.",
+      "destrava": "é a única peça que liga chat e clima em produção; fecha a issue #4 e responde à Discussion #3 e à #12"
+    }
+  ],
+  "commits": [
+    { "sha": "cd74467", "mensagem": "feat: chat Gemini sobre os dados filtrados e clima na topbar", "autor": "gustavo-lima-nitro", "hora": "10:08" },
+    { "sha": "1447ab3", "mensagem": "Merge pull request #2 from gustavo-lima-nitro/feat/gemini-chat-e-clima", "autor": "gustavo-lima-nitro", "hora": "10:27" },
+    { "sha": "f08e7ef", "mensagem": "fix: usa caminhos absolutos em /api/* para o modo proxy ser detectado (#8)", "autor": "gustavo-lima-nitro", "hora": "11:47" },
+    { "sha": "d148764", "mensagem": "feat: rewrite da raiz para o dashboard no deploy da Vercel (#9)", "autor": "gustavo-lima-nitro", "hora": "11:50" },
+    { "sha": "94260d7", "mensagem": "fix: fecha o proxy aberto de /api/chat no server.mjs (#10)", "autor": "gustavo-lima-nitro", "hora": "13:35" }
+  ],
+  "discussions": [
+    {
+      "numero": 3,
+      "titulo": "Problema com o chat dos dados",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/3",
+      "categoria": "Ideas",
+      "autor": "gustavo-lima-nitro",
+      "criada_em": "2026-09-09T13:39:53Z",
+      "nova_hoje": true,
+      "comentarios_hoje": 0,
+      "resumo": "O dono pediu duas coisas: usar as API keys das Environment Variables da Vercel e fazer a raiz do deploy abrir o dashboard. A segunda foi entregue e está no ar (#5, PR #9); a primeira virou a issue #4 e segue aberta.",
+      "citacao": "O aplicativo não esta conseguindo acessar as API keys do gemini e openweathermap, elas estão no environment variables do vercel, use de lá."
+    },
+    {
+      "numero": 12,
+      "titulo": "Problema com API key",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/12",
+      "categoria": "Ideas",
+      "autor": "gustavo-lima-nitro",
+      "criada_em": "2026-09-09T16:42:12Z",
+      "nova_hoje": true,
+      "comentarios_hoje": 0,
+      "resumo": "Três horas depois da Discussion #3, o mesmo problema foi reaberto com print de tela: o app continua sem achar a chave nas Environment Variables. É a confirmação, em produção, de que a issue #4 segue de pé.",
+      "citacao": "O meu aplicativo não esta conseguindo achar a api key do environment variable do versel"
+    },
+    {
+      "numero": 13,
+      "titulo": "Falta exportar o recorte filtrado (CSV/imagem) para levar pra reunião",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/13",
+      "categoria": "Ideas",
+      "autor": "gustavo-lima-nitro",
+      "criada_em": "2026-09-09T16:54:50Z",
+      "nova_hoje": true,
+      "comentarios_hoje": 0,
+      "resumo": "Persona de analista de marketing: o painel filtra rápido, mas não deixa levar o recorte embora — sem CSV da tabela filtrada nem PNG do mapa. Hoje a saída é print de tela.",
+      "citacao": "Pra decisão comercial isso importa: hoje eu preciso printar a tela na marra."
+    },
+    {
+      "numero": 14,
+      "titulo": "No celular a barra de filtros \"BEBIDA\" vaza pra fora da tela",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/14",
+      "categoria": "General",
+      "autor": "gustavo-lima-nitro",
+      "criada_em": "2026-09-09T16:55:00Z",
+      "nova_hoje": true,
+      "comentarios_hoje": 0,
+      "resumo": "Em 375px o cabeçalho corta à direita e a fileira Total/Cerveja/Destilados/Vinho não cabe, sem indicar que dá para rolar. O resto empilha bem.",
+      "citacao": "Fiquei achando que faltava botão até perceber que tinha mais coisa ali."
+    },
+    {
+      "numero": 15,
+      "titulo": "Insights automáticos celebram consumo (\"lidera\", \"1,6x a média\") sem nenhum contraponto",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/15",
+      "categoria": "Ideas",
+      "autor": "gustavo-lima-nitro",
+      "criada_em": "2026-09-09T16:55:13Z",
+      "nova_hoje": true,
+      "comentarios_hoje": 0,
+      "resumo": "Os insights automáticos escrevem consumo per capita em tom de ranking de desempenho, sem uma linha de contexto lembrando que o dado é de uma substância com risco à saúde. Pedido explícito: não mudar o propósito da ferramenta, só o enquadramento do texto.",
+      "citacao": "o texto trata litros de álcool per capita como troféu (\"lidera\"), sem nenhuma nota de rodapé"
+    },
+    {
+      "numero": 16,
+      "titulo": "Rótulos \"MÉDIA\" e \"MEDIANA\" colidem no gráfico de Distribuição",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/16",
+      "categoria": "General",
+      "autor": "gustavo-lima-nitro",
+      "criada_em": "2026-09-09T16:55:23Z",
+      "nova_hoje": true,
+      "comentarios_hoje": 0,
+      "resumo": "No histograma, as linhas de média e mediana ficam perto o suficiente para os rótulos se sobreporem — lê-se \"MÉDIAMEDIANA\" grudado.",
+      "citacao": "numa peça que se vende pela precisão do dado, um rótulo ilegível pesa"
+    }
+  ],
+  "producao": {
+    "url": "https://nitrodash-three.vercel.app",
+    "http": 200,
+    "endpoints": [
+      { "path": "/api/config", "http": 404 },
+      { "path": "/Dashboards/index.html", "http": 200 }
+    ],
+    "observacao": "A raiz abre o dashboard — o rewrite da PR #9 está provado em produção. Mas /api/config responde 404, então o bootConfig() cai em modo off e chat e clima seguem desligados no ar, exatamente como a issue #4 descreve. Nenhuma das quatro PRs mergeadas hoje mudou isso; quem muda é a PR #11, ainda aberta."
+  },
+  "mesa_do_dono": [
+    {
+      "assunto": "A PR #11 é a única peça que liga chat e clima em produção — e está aberta, sem revisão.",
+      "por_que": "As Environment Variables do painel da Vercel só passam a ser lidas quando existir código rodando no servidor. A PR cria as três Serverless Functions; sem merge, o painel continua configurado para nada.",
+      "caminho": "Revisar e mergear a PR #11 e, no painel da Vercel, confirmar que GEMINI_API_KEY e OPENWEATHER_API_KEY estão preenchidas no ambiente de produção. O painel é o único passo que depende da sua credencial.",
+      "como_conferir": "curl -s -o /dev/null -w \"%{http_code}\\n\" https://nitrodash-three.vercel.app/api/config",
+      "referencia": "#4"
+    },
+    {
+      "assunto": "Não há Node.js nesta máquina, então nenhuma entrega de servidor foi testada de verdade rodando.",
+      "por_que": "As PRs #10 e #11 mexem em código de servidor. As duas foram provadas carregando as funções no motor JS do navegador e exercitando-as contra payloads adversariais — o que confirma a lógica, mas não um ciclo HTTP real.",
+      "caminho": "Instalar o Node 18+ (ou aceitar explicitamente que a verificação de servidor deste projeto para no motor do navegador). É decisão sua, não da frota.",
+      "como_conferir": "node --version",
+      "referencia": "PR #10, PR #11"
+    }
+  ],
+  "atrasos_da_casa": [
+    { "item": "PR #11", "parado_desde": "2026-09-09T16:30:23Z", "o_que_destrava": "chat e clima em produção, a issue #4 e as Discussions #3 e #12", "de_quem_depende": "frota" },
+    { "item": "Discussions #13, #14, #15, #16", "parado_desde": "2026-09-09T16:54:50Z", "o_que_destrava": "quatro achados de uso — exportar recorte, quebra em 375px, enquadramento dos insights e rótulos colidindo — nenhum deles virou issue ainda", "de_quem_depende": "frota" }
+  ],
+  "avisos": [
+    "Quadro do projeto não lido: o token do gh não tem o escopo read:project.",
+    "Nenhuma das PRs de hoje registra revisor humano — o campo reviewDecision voltou vazio nas quatro.",
+    "Primeira edição do jornal: não há série histórica para comparar os números do dia."
+  ]
+}

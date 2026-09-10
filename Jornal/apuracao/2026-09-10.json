@@ -1,0 +1,160 @@
+{
+  "data": "2026-09-10",
+  "dia_semana": "quinta-feira",
+  "janela": { "inicio": "2026-09-10T00:00:00-03:00", "fim": "2026-09-10T23:59:59-03:00" },
+  "numeros": {
+    "issues_abertas_hoje": 0,
+    "issues_fechadas_hoje": 0,
+    "backlog_aberto": 5,
+    "prs_abertas_hoje": 0,
+    "prs_mergeadas_hoje": 0,
+    "prs_fechadas_sem_merge_hoje": 0,
+    "prs_abertas_no_fim_do_dia": 1,
+    "prs_em_rascunho": 0,
+    "commits_hoje": 0,
+    "linhas_adicionadas": 0,
+    "linhas_removidas": 0,
+    "arquivos_tocados": 0,
+    "discussions_novas_hoje": 0,
+    "discussions_comentadas_hoje": 0,
+    "discussions_total": 9,
+    "comentarios_hoje": 0,
+    "quadro": null
+  },
+  "issues_fechadas": [],
+  "issues_abertas": [
+    {
+      "numero": 4,
+      "titulo": "Chat e clima não funcionam na Vercel: não existe função serverless lendo as environment variables",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/4",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T13:56:45Z",
+      "dias_aberta": 1,
+      "resumo": "A Vercel serve o repositório como conteúdo estático: não há código rodando no servidor, /api/config responde 404 e o bootConfig() cai no modo off. As chaves configuradas no painel nunca são usadas. A PR #11 propõe as três Serverless Functions e continua aberta.",
+      "bloqueada_por": "outra_issue"
+    },
+    {
+      "numero": 17,
+      "titulo": "Conflito de merge na PR #11: .env.example divergiu depois do merge da PR #10",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/17",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T23:28:34Z",
+      "dias_aberta": 1,
+      "resumo": "A PR #11 saiu de d148764 às 16:30 UTC e a PR #10 foi mergeada às 16:35 UTC; as duas acrescentam um bloco sobre ALLOWED_ORIGINS no fim do .env.example, com texto diferente. É o único arquivo em conflito. A própria issue traz a instrução de correção: rebase em cima do master.",
+      "bloqueada_por": "nada"
+    },
+    {
+      "numero": 21,
+      "titulo": "Produto não reserva nenhum espaço fixo para mensagem de consumo responsável",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/21",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T23:50:37Z",
+      "dias_aberta": 1,
+      "resumo": "Os insights automáticos descrevem consumo per capita em tom de ranking (\"lidera\", \"Nx a média\") e não há, em nenhum canto fixo da interface (rodapé ou modal de suporte), linha de consumo responsável. Prioridade alta declarada na issue. Origem: discussion #15.",
+      "bloqueada_por": "decisao"
+    },
+    {
+      "numero": 22,
+      "titulo": "Sem opção de exportar o recorte filtrado (CSV/imagem) para uso comercial",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/22",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T23:50:43Z",
+      "dias_aberta": 1,
+      "resumo": "Não existe botão de baixar a tabela filtrada em CSV nem de salvar mapa ou gráfico como imagem; o único caminho para levar um recorte a uma reunião é o print de tela. Prioridade média-alta declarada na issue. Origem: discussion #13.",
+      "bloqueada_por": "nada"
+    },
+    {
+      "numero": 23,
+      "titulo": "Mapa abre por padrão em escala por quantil, podendo distorcer comparação de mercados em reunião",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/23",
+      "autor": "gustavo-lima-nitro",
+      "labels": [],
+      "aberta_em": "2026-09-09T23:50:50Z",
+      "dias_aberta": 1,
+      "resumo": "O mapa inicia em escala por quantil, em que a cor segue a posição no ranking e não o valor em litros, e o toggle Quantil/Linear não explica a diferença. Prioridade média declarada na issue. Origem: discussion #18.",
+      "bloqueada_por": "decisao"
+    }
+  ],
+  "prs_mergeadas": [],
+  "prs_abertas": [
+    {
+      "numero": 11,
+      "titulo": "feat: Serverless Functions para o chat e o clima na Vercel",
+      "url": "https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/11",
+      "autor": "gustavo-lima-nitro",
+      "rascunho": false,
+      "aberta_em": "2026-09-09T16:30:23Z",
+      "dias_parada": 1,
+      "resumo": "Cria api/config.mjs, api/weather.mjs e api/chat.mjs lendo process.env, com o mesmo contrato HTTP do server.mjs; +335/-2 em 7 arquivos. A revisão automática de 09/09 aprovou o conteúdo e não mergeou: o GitHub reporta mergeable CONFLICTING / mergeStateStatus DIRTY por causa do .env.example (issue #17). Nenhum comentário novo hoje.",
+      "destrava": "issue #4 — chat e clima em produção; sem ela /api/* continua 404 na Vercel"
+    }
+  ],
+  "commits": [],
+  "discussions": [],
+  "producao": {
+    "url": "https://nitrodash-three.vercel.app",
+    "http": 200,
+    "endpoints": [
+      { "path": "/", "http": 200 },
+      { "path": "/Dashboards/index.html", "http": 200 },
+      { "path": "/api/config", "http": 404 },
+      { "path": "/api/weather", "http": 404 },
+      { "path": "/api/chat", "http": 404 }
+    ],
+    "observacao": "O dashboard abre na raiz (rewrite entregue ontem pela PR #9; a página servida em 200 traz o título \"Nitro · Alcohol Intelligence\"). As três rotas de API seguem 404, o que confirma que a issue #4 continua valendo em produção: chat e clima ficam no modo off para quem abre a URL pública. Nada mudou em produção hoje porque nada foi mergeado hoje."
+  },
+  "mesa_do_dono": [
+    {
+      "assunto": "Chaves do Gemini e do OpenWeatherMap no painel da Vercel",
+      "por_que": "Mesmo depois que a PR #11 for mergeada, as funções só respondem com as environment variables definidas no projeto, e variáveis novas só valem para builds novos — exige redeploy.",
+      "caminho": "Settings → Environment Variables no projeto da Vercel, definir GEMINI_API_KEY e OPENWEATHER_API_KEY, e disparar um redeploy. Nenhum agente tem acesso ao painel.",
+      "como_conferir": "curl -s -o /dev/null -w \"%{http_code}\\n\" https://nitrodash-three.vercel.app/api/config",
+      "referencia": "#4"
+    },
+    {
+      "assunto": "Decisão de produto sobre espaço fixo de consumo responsável",
+      "por_que": "A issue #21 pergunta se cabe uma linha padrão de consumo responsável na interface de um produto de uma empresa de bebidas. É escolha de produto e de marca, não de implementação — a frota não decide sozinha o que a Nitro assina.",
+      "caminho": "Responder na issue #21 dizendo se entra, onde entra (rodapé fixo, painel de insights ou os dois) e com que texto.",
+      "como_conferir": "gh issue view 21 --comments",
+      "referencia": "#21"
+    },
+    {
+      "assunto": "Escala padrão do mapa: quantil ou linear",
+      "por_que": "A issue #23 aponta risco de leitura em reunião comercial, mas trocar o padrão muda como todo mundo lê o mapa. É decisão de produto sobre qual leitura o dashboard defende por padrão.",
+      "caminho": "Definir na issue #23 se o padrão passa a ser linear, se o toggle ganha explicação inline, ou as duas coisas.",
+      "como_conferir": "gh issue view 23 --comments",
+      "referencia": "#23"
+    }
+  ],
+  "atrasos_da_casa": [
+    {
+      "item": "PR #11",
+      "parado_desde": "2026-09-09T16:30:23Z",
+      "o_que_destrava": "Rebase de fix/issue-4-vercel-serverless em cima do master e resolução do conflito no fim do .env.example (issue #17). O conflito é de um arquivo só e de texto de comentário; CLAUDE.md e Dashboards/index.html fazem auto-merge.",
+      "de_quem_depende": "frota"
+    },
+    {
+      "item": "Issue #17",
+      "parado_desde": "2026-09-09T23:28:34Z",
+      "o_que_destrava": "É a própria instrução de correção do conflito da PR #11; segue aberta e sem PR associada.",
+      "de_quem_depende": "frota"
+    },
+    {
+      "item": "Issue #22",
+      "parado_desde": "2026-09-09T23:50:43Z",
+      "o_que_destrava": "Nenhuma PR foi aberta para a exportação de CSV/imagem. Não depende de credencial nem de decisão do dono: é trabalho client-side, coerente com a promessa de processamento local.",
+      "de_quem_depende": "frota"
+    }
+  ],
+  "avisos": [
+    "quadro do projeto não lido: token sem escopo read:project (gh project list falhou com 'missing required scopes [read:project]')",
+    "apuração executada às 08:47 (America/Sao_Paulo); até esse horário não houve nenhum evento no repositório hoje — o último evento registrado é de 2026-09-09T23:50:52Z. Atividade posterior a esta apuração não entra nesta edição",
+    "dia zerado conferido por quatro caminhos independentes: gh issue list, gh pr list, commits desde 2026-09-10T03:00:00Z e /events do repositório — nenhum item de hoje em nenhum deles",
+    "existe na máquina local o branch fix/issue-21-consumo-responsavel, criado em 2026-09-09 20:55 local, apontando para 94260d7 e sem nenhum commit próprio; não foi enviado ao GitHub e por isso não aparece na plataforma",
+    "nenhum release ou tag publicado no repositório (gh release list sem resultado)"
+  ]
+}

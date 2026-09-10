@@ -39,6 +39,11 @@ const OWM_KEY = ENV.OPENWEATHER_API_KEY || "";
 const MODELS = (ENV.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash,gemini-flash-latest")
   .split(",").map(s => s.trim()).filter(Boolean);
 const PORT = Number(ENV.PORT || 8080);
+/* Supabase (formulário de suporte). A publishable/anon key é pública por
+   design — vai para o navegador de propósito; quem segura o acesso é a RLS
+   (só INSERT em suporte_mensagens). A service_role NUNCA entra aqui. */
+const SUPABASE_URL = (ENV.SUPABASE_URL || "").replace(/\/+$/, "");
+const SUPABASE_ANON_KEY = ENV.SUPABASE_ANON_KEY || "";
 
 /* ── prompt de sistema (montado AQUI, nunca recebido do cliente) ─────────── */
 /* Espelha o SYSTEM_PROMPT de Dashboards/index.html, usado no modo direto.
@@ -238,7 +243,10 @@ createServer(async (req, res) => {
   const path = u.pathname;
 
   if (path === "/api/config") {
-    return json(res, 200, { proxy: true, chat: !!GEMINI_KEY, weather: !!OWM_KEY, models: MODELS });
+    return json(res, 200, {
+      proxy: true, chat: !!GEMINI_KEY, weather: !!OWM_KEY, models: MODELS,
+      supabaseUrl: SUPABASE_URL, supabaseAnonKey: SUPABASE_ANON_KEY,
+    });
   }
 
   /* as duas rotas que gastam chave passam pelas mesmas barreiras */

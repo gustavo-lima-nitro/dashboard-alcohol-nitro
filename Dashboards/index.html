@@ -522,6 +522,9 @@ body::before{
   font-size:11px;color:var(--green);letter-spacing:.03em;display:none;align-items:center;gap:7px;
 }
 .msent.on{display:flex}
+.msent.err{color:var(--gunmetal)}
+.msent.err svg{display:none}
+.msent.busy{color:var(--gunmetal)}
 
 /* ─────────── WIDGET DE CLIMA (TOPBAR) ─────────── */
 .weather{
@@ -933,7 +936,7 @@ body::before{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
-    <p class="msub">Descreva sua dúvida ou problema. Este formulário ainda é apenas um teste local — o envio real será conectado em breve.</p>
+    <p class="msub" id="supSub">Descreva sua dúvida ou problema. Sua mensagem vai direto para a equipe Nitro.</p>
     <form class="mform" id="supportForm">
       <div class="mfield">
         <label for="supName">Nome</label>
@@ -960,7 +963,7 @@ body::before{
         <button type="submit" class="btn btn-primary">Enviar</button>
         <span class="msent" id="supSent">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          Recebido (modo teste — nada foi enviado)
+          <span id="supSentTxt">Recebido! Obrigado pelo contato.</span>
         </span>
       </div>
     </form>
@@ -2056,19 +2059,63 @@ function resetAll(){
 
   /* ═══════════ SUPORTE (FAB + MODAL) ═══════════ */
   const supOvl=$("#supportOvl");
-  const openSupport=()=>{ supOvl.classList.add("on"); $("#supSent").classList.remove("on"); };
+  const openSupport=()=>{ supOvl.classList.add("on"); $("#supSent").classList.remove("on","err","busy"); };
   const closeSupport=()=>supOvl.classList.remove("on");
   $("#btnSupport").onclick=openSupport;
   $("#supportClose").onclick=closeSupport;
   supOvl.addEventListener("click",e=>{ if(e.target===supOvl) closeSupport(); });
   addEventListener("keydown",e=>{ if(e.key==="Escape") closeSupport(); });
-  $("#supportForm").addEventListener("submit",e=>{
+  /* Envio para o Supabase (tabela public.suporte_mensagens).
+     A chave usada é a publishable/anon — pública por design; o que protege a
+     tabela é a RLS, que só autoriza INSERT (ver supabase/001_*.sql).
+     `enviado_em` NÃO é enviado: quem carimba a data é o default now() do banco. */
+  const supSentBox=$("#supSent"), supSentTxt=$("#supSentTxt");
+  function supFeedback(msg,kind){
+    supSentTxt.textContent=msg;
+    supSentBox.classList.remove("err","busy");
+    if(kind) supSentBox.classList.add(kind);
+    supSentBox.classList.add("on");
+  }
+  $("#supportForm").addEventListener("submit",async e=>{
     e.preventDefault();
-    // sem backend por enquanto: só simula o recebimento até a integração com o banco de dados
-    console.info("[nitro/suporte] formulário de teste:",Object.fromEntries(new FormData(e.target)));
-    $("#supSent").classList.add("on");
-    e.target.reset();
-    setTimeout(closeSupport,1600);
+    const form=e.target, btn=form.querySelector('button[type="submit"]');
+    const fd=new FormData(form);
+    const payload={
+      nome:(fd.get("nome")||"").trim(),
+      email:(fd.get("email")||"").trim(),
+      assunto:fd.get("assunto")||"duvida",
+      mensagem:(fd.get("mensagem")||"").trim(),
+    };
+    if(!CFG.support){
+      console.info("[nitro/suporte] Supabase não configurado — mensagem não enviada:",payload);
+      supFeedback("Envio indisponível: o suporte precisa do servidor local com SUPABASE_URL/SUPABASE_ANON_KEY no .env.","err");
+      return;
+    }
+    btn.disabled=true; supFeedback("Enviando…","busy");
+    try{
+      const r=await fetch(`${CFG.sbUrl}/rest/v1/suporte_mensagens`,{
+        method:"POST",
+        headers:{
+          "content-type":"application/json",
+          apikey:CFG.sbKey,
+          authorization:`Bearer ${CFG.sbKey}`,
+          prefer:"return=minimal",
+        },
+        body:JSON.stringify(payload),
+      });
+      if(!r.ok){
+        let detail=""; try{ detail=(await r.json()).message||""; }catch(_){ }
+        throw new Error(detail||`HTTP ${r.status}`);
+      }
+      supFeedback("Recebido! Obrigado pelo contato.");
+      form.reset();
+      setTimeout(closeSupport,1600);
+    }catch(err){
+      console.warn("[nitro/suporte] falha no envio:",err);
+      supFeedback("Não conseguimos enviar agora. Tente novamente em instantes.","err");
+    }finally{
+      btn.disabled=false;
+    }
   });
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -2084,7 +2131,8 @@ function resetAll(){
                     arquivo local, então clima e chat ficam desligados
                     com um aviso — o resto do dashboard segue igual.
      ═══════════════════════════════════════════════════════════════════ */
-  const CFG = { mode:"off", chat:false, weather:false, models:[], geminiKey:"", owmKey:"" };
+  const CFG = { mode:"off", chat:false, weather:false, models:[], geminiKey:"", owmKey:"",
+                sbUrl:"", sbKey:"", support:false };
 
   function parseEnv(text){
     const out={};
@@ -2111,6 +2159,8 @@ function resetAll(){
           if(c && c.proxy){
             CFG.mode="proxy"; CFG.chat=!!c.chat; CFG.weather=!!c.weather;
             CFG.models=(c.models&&c.models.length)?c.models:DEFAULT_MODELS;
+            CFG.sbUrl=(c.supabaseUrl||"").replace(/\/+$/,""); CFG.sbKey=c.supabaseAnonKey||"";
+            CFG.support=!!(CFG.sbUrl&&CFG.sbKey);
             return CFG;
           }
         }
@@ -2122,7 +2172,7 @@ function resetAll(){
           const r=await fetch(p,{cache:"no-store"});
           if(!r.ok) continue;
           const txt=await r.text();
-          if(!/(^|\n)\s*(GEMINI_API_KEY|OPENWEATHER_API_KEY)\s*=/.test(txt)) continue;
+          if(!/(^|\n)\s*(GEMINI_API_KEY|OPENWEATHER_API_KEY|SUPABASE_URL)\s*=/.test(txt)) continue;
           const e=parseEnv(txt);
           CFG.mode="direct";
           CFG.geminiKey=e.GEMINI_API_KEY||"";
@@ -2130,6 +2180,8 @@ function resetAll(){
           CFG.models=(e.GEMINI_MODELS||"").split(",").map(s=>s.trim()).filter(Boolean);
           if(!CFG.models.length) CFG.models=DEFAULT_MODELS;
           CFG.chat=!!CFG.geminiKey; CFG.weather=!!CFG.owmKey;
+          CFG.sbUrl=(e.SUPABASE_URL||"").replace(/\/+$/,""); CFG.sbKey=e.SUPABASE_ANON_KEY||"";
+          CFG.support=!!(CFG.sbUrl&&CFG.sbKey);
           return CFG;
         }catch(_){/* tenta o próximo caminho */}
       }
@@ -2487,6 +2539,9 @@ function resetAll(){
       $("#chatFoot").innerHTML="Apenas o <b>recorte filtrado</b> é enviado ao Gemini. Nenhum outro dado sai do navegador.";
     }else{
       $("#chatFoot").innerHTML="Chat e clima exigem o servidor local (<b>serve.ps1</b> ou <b>server.mjs</b>) para ler o <b>.env</b>.";
+    }
+    if(!CFG.support){
+      $("#supSub").textContent="Descreva sua dúvida ou problema. O envio real exige o servidor local (serve.ps1 ou server.mjs) para ler o .env — sem ele a mensagem não é gravada.";
     }
     syncChatFilters();
   });

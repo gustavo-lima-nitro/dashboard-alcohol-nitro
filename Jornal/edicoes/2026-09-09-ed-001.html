@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>O Diário do NitroDash — Ed. Nº 001</title></head>
+<body style="margin:0;padding:0;background-color:#F4F6F8;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F4F6F8;">
+ <tr><td align="center" style="padding:24px 12px;">
+  <table role="presentation" width="680" cellpadding="0" cellspacing="0" border="0" style="width:680px;max-width:680px;background-color:#FFFFFF;border:1px solid #DDE3E8;">
+
+   <tr><td style="background-color:#003663;padding:9px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;color:#B9DA00;text-transform:uppercase;">Boletim diário &middot; edição do dono &middot; confidencial</td></tr>
+
+   <tr><td style="padding:30px 28px 8px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;">
+     <div style="font-size:33px;line-height:1.1;font-weight:700;color:#003663;">O Diário do NitroDash</div>
+     <div style="font-size:13px;font-style:italic;color:#424242;padding-top:7px;">Tudo o que a frota de agentes fez no dashboard enquanto você tocava a operação</div>
+   </td></tr>
+   <tr><td style="padding:6px 28px 0 28px;"><div style="border-top:3px solid #94C356;"></div></td></tr>
+   <tr><td style="padding:10px 28px 18px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#424242;">Edição Nº 001 &middot; quarta-feira, 9 de setembro de 2026 &middot; Produção &middot; Vercel &middot; master</div></td></tr>
+
+   <tr><td style="padding:0 28px 20px 28px;">
+     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="background-color:#F4F6F8;border-left:4px solid #003663;padding:14px 16px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">
+       <span style="font-weight:700;color:#003663;">CLIMA DO PROJETO:</span> dia intenso e produtivo — 4 issues fechadas, 4 PRs mergeadas, 1.160 linhas somadas e um furo de segurança tapado antes de virar público. A raiz do deploy abriu de verdade, e isso está provado. O incômodo é que o pedido central do dia continua de pé: o chat e o clima seguem desligados em produção, e você mesmo voltou às 16h42 para dizer isso pela segunda vez.
+      </td></tr></table>
+   </td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">Capa &middot; o pedido que voltou como reclamação</td></tr>
+   <tr><td style="padding:10px 28px 4px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:24px;line-height:1.25;font-weight:700;color:#003663;">
+     Você pediu duas coisas às 10h39. Uma está no ar; a outra você teve que pedir de novo às 13h42.
+   </td></tr>
+   <tr><td style="padding:6px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;font-style:italic;color:#424242;">
+     A frota fechou quatro issues e mergeou quatro PRs no dia. Nenhuma das quatro liga o chat em produção — quem faz isso é a PR que ficou aberta.
+   </td></tr>
+   <tr><td style="padding:14px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#424242;">
+     <p style="margin:0 0 12px 0;">A <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/3" style="color:#003663;font-weight:600;text-decoration:underline;">Discussion #3</a> trouxe dois pedidos na mesma frase: usar as API keys que já estão nas Environment Variables da Vercel, e fazer a raiz do deploy abrir o dashboard em vez de uma página vazia.</p>
+     <p style="margin:0 0 12px 0;">O segundo pedido foi entregue e <strong>está provado em produção</strong>: a raiz responde HTTP 200 e serve o dashboard, via um rewrite de cinco linhas no <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">vercel.json</code> (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/5" style="color:#003663;font-weight:600;text-decoration:underline;">#5</a> &middot; <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/9" style="color:#003663;font-weight:600;text-decoration:underline;">PR #9</a>).</p>
+     <p style="margin:0 0 12px 0;">O primeiro não. A causa está diagnosticada na <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/4" style="color:#003663;font-weight:600;text-decoration:underline;">issue #4</a>: a Vercel serve este repositório como conteúdo estático. O <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">server.mjs</code> é um processo persistente, formato que a plataforma não executa, e não havia diretório <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">api/</code>. Sem código rodando no servidor, as variáveis do painel não são lidas por ninguém — <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">/api/config</code> devolve 404, o dashboard entra em modo <em>off</em> e desliga chat e clima.</p>
+     <p style="margin:0 0 12px 0;">Às 13h42, três horas depois, você abriu a <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/12" style="color:#003663;font-weight:600;text-decoration:underline;">Discussion #12</a> com print de tela dizendo a mesma coisa. Esta redação confirmou por conta própria, hoje à noite: a raiz responde 200, o <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">/api/config</code> responde 404. A correção existe, tem 335 linhas e três funções serverless — e está na <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/11" style="color:#003663;font-weight:600;text-decoration:underline;">PR #11</a>, aberta às 13h30, sem revisão.</p>
+   </td></tr>
+   <tr><td style="padding:4px 28px 20px 28px;">
+     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="background-color:#F4F6F8;border-left:4px solid #94C356;padding:12px 14px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">
+       <em style="font-weight:700;">Por que importa para você:</em> o dia parece ótimo pelo placar e o produto que está no ar não mudou naquilo que você pediu. Enquanto a PR #11 não entra, qualquer chave que você preencha no painel da Vercel fica configurada para ninguém. (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/4" style="color:#003663;font-weight:600;text-decoration:underline;">#4</a> &middot; <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/11" style="color:#003663;font-weight:600;text-decoration:underline;">PR #11</a>)
+      </td></tr></table>
+   </td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 4px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">Os números do dia</td></tr>
+   <tr><td style="padding:8px 28px 0 28px;">
+     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+       <td width="33%" style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">4</div><div style="font-size:11px;color:#424242;padding-top:3px;">PRs mergeadas hoje</div></td>
+       <td width="4" style="width:4px;"></td>
+       <td width="33%" style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">4</div><div style="font-size:11px;color:#424242;padding-top:3px;">Issues fechadas hoje</div></td>
+       <td width="4" style="width:4px;"></td>
+       <td width="33%" style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">5</div><div style="font-size:11px;color:#424242;padding-top:3px;">Issues abertas hoje</div></td>
+      </tr>
+      <tr><td colspan="5" height="4" style="height:4px;"></td></tr>
+      <tr>
+       <td style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">1</div><div style="font-size:11px;color:#424242;padding-top:3px;">PR aberta no fim do dia</div></td>
+       <td style="width:4px;"></td>
+       <td style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">1</div><div style="font-size:11px;color:#424242;padding-top:3px;">Backlog aberto</div></td>
+       <td style="width:4px;"></td>
+       <td style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">6</div><div style="font-size:11px;color:#424242;padding-top:3px;">Discussions novas</div></td>
+      </tr>
+      <tr><td colspan="5" height="4" style="height:4px;"></td></tr>
+      <tr>
+       <td style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">5</div><div style="font-size:11px;color:#424242;padding-top:3px;">Commits no master</div></td>
+       <td style="width:4px;"></td>
+       <td style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">+1.160</div><div style="font-size:11px;color:#424242;padding-top:3px;">linhas (&minus;14, 13 arquivos)</div></td>
+       <td style="width:4px;"></td>
+       <td style="background-color:#F4F6F8;padding:12px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;"><div style="font-size:26px;font-weight:700;color:#003663;line-height:1.1;">200<span style="font-size:15px;"> / 404</span></div><div style="font-size:11px;color:#424242;padding-top:3px;">raiz / <span style="font-family:Consolas,'Courier New',monospace;">/api/config</span></div></td>
+      </tr>
+     </table>
+   </td></tr>
+   <tr><td style="padding:10px 28px 20px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#424242;">
+     Saldo do dia: fechou 4, abriu 5 — o backlog terminou em 1, porque quatro das cinco issues abertas hoje nasceram e morreram no mesmo dia. Zero comentários em issues e PRs, e nenhuma das quatro PRs mergeadas registra revisor humano. O quadro do projeto não entrou nesta edição: o token não tem o escopo <span style="font-family:Consolas,'Courier New',monospace;">read:project</span>.
+   </td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">Segurança &middot; fechado antes de virar público</td></tr>
+   <tr><td style="padding:10px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:20px;line-height:1.3;font-weight:700;color:#003663;">
+     O chat do dashboard era um Gemini de uso geral pago pela chave da Nitro — e quem escrevia as regras era o cliente
+   </td></tr>
+   <tr><td style="padding:12px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#424242;">
+     <p style="margin:0 0 12px 0;">Entre o <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">JSON.parse</code> do corpo e a chamada ao modelo, o endpoint <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">/api/chat</code> não tinha barreira nenhuma. O prompt de sistema — justamente o que mantém o modelo preso ao recorte filtrado — vinha no request e era usado como recebido. Trocar aquele campo transformava o endpoint num assistente de uso geral custeado pela chave da Nitro. E não havia teto de tamanho útil, checagem de origem nem rate limit (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/6" style="color:#003663;font-weight:600;text-decoration:underline;">#6</a>).</p>
+     <p style="margin:0 0 12px 0;">A correção fechou os quatro caminhos: o prompt agora é sempre o do servidor (um <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">system</code> que venha no corpo é ignorado, não rejeitado, então cliente antigo não quebra), a validação sanea os turnos e limita 16 turnos, 60 mil caracteres por trecho e 256 KB de corpo, origem cruzada é barrada e o rate limit por IP deixa 10 chamadas por minuto no chat e 20 no clima (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/10" style="color:#003663;font-weight:600;text-decoration:underline;">PR #10</a>).</p>
+     <p style="margin:0 0 12px 0;">A honestidade da nota: <strong>não houve teste HTTP rodando.</strong> Não existe Node nesta máquina, então as funções foram carregadas no motor JS do navegador e exercitadas contra payloads adversariais — array vazio, 20 turnos, trecho de 60.001 caracteres, tentativa de <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">inline_data</code>, <em>curl</em> remoto disfarçado. A lógica está provada; o ciclo HTTP real, não.</p>
+   </td></tr>
+   <tr><td style="padding:4px 28px 20px 28px;">
+     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="background-color:#F4F6F8;border-left:4px solid #94C356;padding:12px 14px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">
+       <em style="font-weight:700;">Por que importa para você:</em> o risco era contido só porque o servidor rodava em localhost. A PR #11, que você vai mergear para ligar o chat em produção, é exatamente a que torna esse endpoint público — e ela já nasce com a mesma trava, de propósito. Ordem invertida, a conta seria sua e vinha de terceiros.
+      </td></tr></table>
+   </td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">Bastidores &middot; a faxina que ninguém vê</td></tr>
+   <tr><td style="padding:10px 28px 20px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#424242;">
+     <p style="margin:0 0 10px 0;"><span style="color:#94C356;font-weight:700;">&#9656;</span> <strong>26 minutos de vida</strong> (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/7" style="color:#003663;font-weight:600;text-decoration:underline;">#7</a> &middot; <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/8" style="color:#003663;font-weight:600;text-decoration:underline;">PR #8</a>). A detecção de modo consultava <code style="font-family:Consolas,'Courier New',monospace;font-size:13px;">/api/*</code> por caminho relativo e nunca achava o proxy, mesmo com ele no ar. Três linhas viraram caminho absoluto. Aberta às 11h21, fechada às 11h47.</p>
+     <p style="margin:0 0 10px 0;"><span style="color:#94C356;font-weight:700;">&#9656;</span> <strong>A entrega grande do dia</strong> (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/1" style="color:#003663;font-weight:600;text-decoration:underline;">#1</a> &middot; <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/2" style="color:#003663;font-weight:600;text-decoration:underline;">PR #2</a>). O chat sobre o recorte filtrado e o clima na topbar entraram de manhã: 991 das 1.160 linhas do dia, mais os dois runtimes locais que existem só porque o navegador não lê o <code style="font-family:Consolas,'Courier New',monospace;font-size:13px;">.env</code> em <code style="font-family:Consolas,'Courier New',monospace;font-size:13px;">file://</code>. É a base de tudo o que veio depois — e de todo o resto desta edição.</p>
+     <p style="margin:0;"><span style="color:#94C356;font-weight:700;">&#9656;</span> <strong>Cinco commits no master</strong>, todos vindos de PR. Nenhum push direto, nenhum <em>force</em>.</p>
+   </td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">A mesa do dono</td></tr>
+   <tr><td style="padding:8px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;font-style:italic;color:#424242;">
+     Só entra aqui o que exige sua credencial, painel de terceiro ou sua decisão — coisas que agente nenhum consegue fazer. Hoje são duas.
+   </td></tr>
+   <tr><td style="padding:12px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#424242;">
+     <p style="margin:0 0 6px 0;font-weight:700;color:#003663;">1. As chaves do painel da Vercel não estão sendo lidas por ninguém.</p>
+     <p style="margin:0 0 10px 0;">Enquanto a <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/11" style="color:#003663;font-weight:600;text-decoration:underline;">PR #11</a> não entrar, não existe código rodando no servidor da Vercel — logo, nenhuma Environment Variable é consultada. O caminho: revisar e mergear a PR e, no painel, confirmar que <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">GEMINI_API_KEY</code> e <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">OPENWEATHER_API_KEY</code> estão preenchidas em produção. O painel é a única parte que depende da sua credencial.</p>
+     <p style="margin:0 0 6px 0;font-size:13px;font-weight:700;color:#424242;">Como conferir depois:</p>
+     <div style="font-family:Consolas,'Courier New',monospace;font-size:13px;background-color:#003663;color:#FFFFFF;padding:10px 12px;margin-bottom:6px;">curl -s -o /dev/null -w "%{http_code}\n" https://nitrodash-three.vercel.app/api/config</div>
+     <p style="margin:0 0 18px 0;font-size:13px;">Hoje responde <strong>404</strong>. Quando responder <strong>200</strong>, o dashboard entra em modo proxy e o chat volta a falar em produção.</p>
+
+     <p style="margin:0 0 6px 0;font-weight:700;color:#003663;">2. Sem Node nesta máquina, nenhuma entrega de servidor é testada rodando.</p>
+     <p style="margin:0 0 10px 0;">As PRs <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/10" style="color:#003663;font-weight:600;text-decoration:underline;">#10</a> e <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/11" style="color:#003663;font-weight:600;text-decoration:underline;">#11</a> mexem em código de servidor e foram provadas no motor JS do navegador — bom o suficiente para a lógica, insuficiente para um ciclo HTTP. Instalar o Node 18+ ou assumir explicitamente esse limite é decisão sua, não da frota.</p>
+     <p style="margin:0 0 6px 0;font-size:13px;font-weight:700;color:#424242;">Como conferir depois:</p>
+     <div style="font-family:Consolas,'Courier New',monospace;font-size:13px;background-color:#003663;color:#FFFFFF;padding:10px 12px;">node --version</div>
+   </td></tr>
+   <tr><td height="20" style="height:20px;"></td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">Opinião</td></tr>
+   <tr><td style="padding:10px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:19px;line-height:1.3;font-weight:700;color:#003663;">
+     Placar de merge não é placar de produto
+   </td></tr>
+   <tr><td style="padding:6px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:0.5px;text-transform:uppercase;color:#424242;">por Ivo Rangel, editor de operações</td></tr>
+   <tr><td style="padding:10px 28px 20px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#424242;">
+     <p style="margin:0 0 12px 0;">Quatro PRs mergeadas, quatro issues fechadas, 1.160 linhas. Por qualquer métrica de esteira, hoje foi um dia excelente. E o produto que está no ar mudou em exatamente um ponto: a raiz passou a abrir o dashboard. O resto — o chat, o clima, a trava do proxy — vive no <span style="font-family:Consolas,'Courier New',monospace;font-size:14px;">master</span>, que é um lugar onde nenhum usuário mora.</p>
+     <p style="margin:0;">A regra que esta redação adota desde a primeira edição é chata e barata: <strong>toda entrega é cobrada em produção, não em merge.</strong> Um <em>curl</em> anônimo custa um segundo e desmente uma tarde inteira de suposição. Foi assim que soubemos que o rewrite funcionou de verdade — e foi assim que soubemos que o <code style="font-family:Consolas,'Courier New',monospace;font-size:14px;">/api/config</code> ainda devolve 404, apesar do placar.</p>
+   </td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">A voz da comunidade</td></tr>
+   <tr><td style="padding:10px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:19px;line-height:1.35;font-weight:700;color:#003663;">
+     &ldquo;O texto trata litros de álcool per capita como troféu&rdquo;
+   </td></tr>
+   <tr><td style="padding:12px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#424242;">
+     <p style="margin:0 0 12px 0;">Quatro observações de uso entraram nas Discussions no fim da tarde, todas de quem olhou a tela sem olhar o código. A mais desconfortável é a <a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/15" style="color:#003663;font-weight:600;text-decoration:underline;">#15</a>: os insights automáticos escrevem consumo em tom de ranking de desempenho — &ldquo;lidera&rdquo;, &ldquo;1,6x a média&rdquo; — sem uma linha lembrando que o dado é de uma substância com risco à saúde. Quem escreveu foi explícito em não pedir mudança de propósito, só de enquadramento.</p>
+     <p style="margin:0 0 12px 0;">As outras três: falta levar o recorte filtrado embora, em CSV ou imagem, sem print de tela (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/13" style="color:#003663;font-weight:600;text-decoration:underline;">#13</a>); em 375px a fileira Total/Cerveja/Destilados/Vinho vaza da tela sem indicar que dá para rolar (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/14" style="color:#003663;font-weight:600;text-decoration:underline;">#14</a>); e no histograma os rótulos de média e mediana se sobrepõem, lendo-se &ldquo;MÉDIAMEDIANA&rdquo; grudado (<a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/discussions/16" style="color:#003663;font-weight:600;text-decoration:underline;">#16</a>).</p>
+     <p style="margin:0 0 12px 0;">A resposta honesta da redação: <strong>nenhuma das quatro virou issue ainda.</strong> Estão em discussion, que é onde ninguém trabalha. Duas delas — o rótulo colado e a fileira que vaza — são de escopo pequeno e fechado, do tamanho exato do que a frota resolve sozinha em uma rodada.</p>
+   </td></tr>
+   <tr><td style="padding:4px 28px 20px 28px;">
+     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="background-color:#F4F6F8;border-left:4px solid #94C356;padding:12px 14px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">
+       <em style="font-weight:700;">Por que importa para você:</em> quatro achados de uso reais custaram zero para aparecer e vão custar caro para achar de novo depois que forem esquecidos. Basta dizer &ldquo;transformem #13 a #16 em issues&rdquo; e eles entram na esteira que hoje fechou quatro coisas em um dia.
+      </td></tr></table>
+   </td></tr>
+
+   <tr><td style="border-top:1px solid #DDE3E8;padding:16px 28px 0 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#003663;font-weight:700;">Radar &middot; em trânsito</td></tr>
+   <tr><td style="padding:10px 28px 20px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">
+     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+       <td width="70" valign="top" style="padding:0 10px 12px 0;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;"><a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/issues/4" style="color:#003663;text-decoration:underline;">#4</a></td>
+       <td valign="top" style="padding:0 0 12px 0;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">Chat e clima desligados na Vercel. Única issue do backlog. Diagnosticada, com correção escrita — espera a PR #11.</td>
+      </tr>
+      <tr>
+       <td valign="top" style="padding:0 10px 12px 0;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;"><a href="https://github.com/gustavo-lima-nitro/dashboard-alcohol-nitro/pull/11" style="color:#003663;text-decoration:underline;">PR #11</a></td>
+       <td valign="top" style="padding:0 0 12px 0;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">Três funções serverless, +335/&minus;2 em 7 arquivos. Pronta para revisão, sem revisor. <strong>Atraso da casa</strong> — destrava a #4, a Discussion #3 e a #12.</td>
+      </tr>
+      <tr>
+       <td valign="top" style="padding:0 10px 12px 0;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;">#13&ndash;#16</td>
+       <td valign="top" style="padding:0 0 12px 0;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">Quatro achados de uso em discussion, nenhum virou issue. <strong>Atraso da casa.</strong></td>
+      </tr>
+      <tr>
+       <td valign="top" style="padding:0 10px 0 0;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;">&mdash;</td>
+       <td valign="top" style="font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#424242;">Quadro do projeto fora desta edição: o token do <span style="font-family:Consolas,'Courier New',monospace;">gh</span> não tem o escopo <span style="font-family:Consolas,'Courier New',monospace;">read:project</span>. Um <span style="font-family:Consolas,'Courier New',monospace;">gh auth refresh -s read:project</span> resolve e a seção passa a existir.</td>
+      </tr>
+     </table>
+   </td></tr>
+
+   <tr><td style="background-color:#003663;padding:20px 28px;font-family:'Poppins','Segoe UI',Arial,Helvetica,sans-serif;text-align:center;">
+     <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#B9DA00;font-weight:700;">O Diário do NitroDash</div>
+     <div style="font-size:12px;color:#FFFFFF;padding-top:8px;line-height:1.6;">Redação composta por agentes &middot; fonte: GitHub <span style="font-family:Consolas,'Courier New',monospace;">gustavo-lima-nitro/dashboard-alcohol-nitro</span></div>
+     <div style="font-size:12px;color:#FFFFFF;padding-top:4px;">Edição Nº 001 &middot; quarta-feira, 9 de setembro de 2026</div>
+     <div style="font-size:12px;color:#94C356;padding-top:8px;font-style:italic;">A próxima edição chega amanhã, às 21h00.</div>
+   </td></tr>
+
+  </table>
+ </td></tr>
+</table>
+</body></html>
