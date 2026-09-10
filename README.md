@@ -69,6 +69,27 @@ node server.mjs
 Os dois sobem em `http://localhost:8080/Dashboards/index.html`. Abrir por `file://` continua
 funcionando — o chat e o clima apenas ficam desativados, com um aviso explicando o motivo.
 
+### Deploy na Vercel
+
+Na Vercel não existe `.env`: as chaves vêm das **Environment Variables** do projeto e são
+lidas pelas Serverless Functions em `api/`, que implementam as mesmas rotas do `server.mjs`
+(`/api/config`, `/api/weather`, `/api/chat`). O navegador continua sem ver chave alguma.
+
+Configure em **Settings → Environment Variables**, para os ambientes desejados:
+
+| Variável | Obrigatória |
+| --- | --- |
+| `GEMINI_API_KEY` | para o chat |
+| `OPENWEATHER_API_KEY` | para o clima |
+| `GEMINI_MODELS` | opcional (há um default no código) |
+| `ALLOWED_ORIGINS` | opcional; só se outra origem precisar chamar as rotas |
+
+Depois **redeploy** — variáveis de ambiente só valem para builds novos. Sem elas o
+dashboard continua funcionando por inteiro; apenas o chat avisa que a chave não está
+configurada e o widget de clima não aparece.
+
+Não é preciso instalar nada: não há `package.json`, dependência nem etapa de build.
+
 ### Variáveis do `.env`
 
 | Variável | Para que serve |
@@ -77,6 +98,7 @@ funcionando — o chat e o clima apenas ficam desativados, com um aviso explican
 | `GEMINI_MODELS` | Cadeia de fallback, da esquerda para a direita |
 | `OPENWEATHER_API_KEY` | Chave do OpenWeatherMap, usada pelo widget de clima |
 | `PORT` | Porta dos servidores locais (padrão 8080) |
+| `ALLOWED_ORIGINS` | Origens extras autorizadas a chamar `/api/*` (separadas por vírgula) |
 
 O `.env` está no `.gitignore` e **nunca** deve ser versionado.
 

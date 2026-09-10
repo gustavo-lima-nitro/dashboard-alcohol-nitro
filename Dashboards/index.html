@@ -2437,8 +2437,12 @@ function resetAll(){
     CHAT.history=[];
     $("#chatLog").innerHTML="";
     if(!CFG.chat){
+      // no modo proxy não existe .env do lado do navegador: a chave pode estar
+      // faltando no server.mjs ou nas environment variables do deploy
       const msg = CFG.mode==="off"
         ? "O chat precisa ler o <code>.env</code>, e o navegador bloqueia isso quando a página é aberta direto do disco (<code>file://</code>).\n\nSuba o servidor local e reabra por ele:\n\n<code>powershell -ExecutionPolicy Bypass -File serve.ps1</code>\n\nou, se tiver Node instalado (chaves ficam fora do navegador):\n\n<code>node server.mjs</code>"
+        : CFG.mode==="proxy"
+        ? "O proxy respondeu, mas <code>GEMINI_API_KEY</code> não está configurada no servidor."
         : "O <code>.env</code> foi lido, mas <code>GEMINI_API_KEY</code> está vazia.";
       pushMsg("ai err", msg);
       return;
@@ -2482,7 +2486,7 @@ function resetAll(){
       ? `Gemini · ${CFG.models[0]}${CFG.models.length>1?` (+${CFG.models.length-1} fallback)`:""}`
       : "Gemini · indisponível";
     if(CFG.mode==="proxy"){
-      $("#chatFoot").innerHTML="Apenas o <b>recorte filtrado</b> é enviado ao Gemini, via proxy local — as chaves não passam pelo navegador.";
+      $("#chatFoot").innerHTML="Apenas o <b>recorte filtrado</b> é enviado ao Gemini, via proxy no servidor — as chaves não passam pelo navegador.";
     }else if(CFG.mode==="direct"){
       $("#chatFoot").innerHTML="Apenas o <b>recorte filtrado</b> é enviado ao Gemini. Nenhum outro dado sai do navegador.";
     }else{

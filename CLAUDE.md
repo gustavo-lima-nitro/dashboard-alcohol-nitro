@@ -86,11 +86,21 @@ de suporte. Elas dependem de um `.env` na raiz — que o navegador **não** cons
 serve.ps1    HttpListener puro; serve os estáticos + o próprio .env. Não há /api/*.
 server.mjs   Node 18+; serve os estáticos e faz proxy de /api/weather e /api/chat.
              Aqui as chaves ficam no processo e nunca chegam ao navegador; o .env é 403.
+api/*.mjs    Serverless Functions da Vercel (config, weather, chat). Mesmo contrato
+             HTTP do server.mjs, mas leem process.env — na Vercel não há .env.
 ```
 
 `bootConfig()` decide o modo em runtime, nesta ordem: **proxy** (`/api/config` responde),
 **direct** (leu o `.env` via fetch) ou **off** (`file://` — chat e clima desligados com
 aviso; o resto do dashboard não muda). Ao mexer nessas features, teste os três modos.
+
+**O `api/` e o `server.mjs` implementam o mesmo contrato e nenhum importa o outro** — a
+Vercel só executa handlers (`export default (req,res)`), e o `server.mjs` é um processo
+persistente. Mexer em `/api/chat` ou `/api/weather` significa editar os dois lados; o
+front não distingue qual está atendendo. Cada função é autocontida de propósito: sem
+`package.json`, sem módulo compartilhado, nada para instalar. As respostas usam
+`res.writeHead`/`res.end` em vez dos helpers `res.status().json()` da Vercel, para o
+mesmo código valer em qualquer runtime Node.
 
 - **O contexto do chat é remontado a cada envio** por `buildContext()`, a partir de
   `filtered()` — nunca de `S.rows`. É isso que faz o modelo respeitar os filtros. O
@@ -109,7 +119,8 @@ aviso; o resto do dashboard não muda). Ao mexer nessas features, teste os três
 - **`CHAT_SYNC`** é o único acoplamento com o núcleo: `renderAll()` chama esse ponteiro
   (nulo até o boot) para manter o resumo de filtros do painel em dia.
 - **Cadeia de fallback**: `GEMINI_MODELS` no `.env`, replicada em `DEFAULT_MODELS`
-  (index.html) e no default de `MODELS` (server.mjs) — mantenha as três em sincronia.
+  (index.html), no default de `MODELS` (server.mjs) e em `DEFAULT_MODELS`
+  (`api/config.mjs` e `api/chat.mjs`) — mantenha as quatro em sincronia.
   404/429/5xx caem para o próximo modelo; 400/401/403 param a cadeia (erro de chave ou
   payload, trocar de modelo não resolveria).
 - **Modelos Gemini 3.x raciocinam antes de responder** e o "pensamento" consome o mesmo
